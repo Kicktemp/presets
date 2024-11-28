@@ -28,7 +28,7 @@
                         class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                       owner
                     </span>
-                  <input type="text" id="github-owser" placeholder="nielsnuebel"
+                  <input type="text" id="github-owner" placeholder="nielsnuebel"
                          v-model="owner"
                          class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"/>
                 </div>
@@ -89,7 +89,7 @@
               <div class="mt-1">
                 <select @change="fetchPresets($event)" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                   <option>Element auswählen</option>
-                  <option v-for="element in elements" :key="element.name" :value="element.url">{{ element.name }}</option>
+                  <option v-for="element in elements" :key="element.name" :value="element.url">{{ element.name }} Presets</option>
                 </select>
               </div>
             </div>
@@ -99,23 +99,69 @@
                 Presets
               </label>
               <div class="mt-1">
-                <select v-model="preset" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                  <option>Preset auswählen</option>
+                <select v-model="preset" @change="fetchJson($event)" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  <option value="">Preset auswählen</option>
                   <option v-for="json in jsons.filter((json) => json.name.substring(json.name.length - 5) == '.json')" :key="json.name" :value="json">{{ json.name }}</option>
                 </select>
               </div>
             </div>
-          </div>
-          <div v-if="showButton" class="px-4 py-3 bg-gray-50 text-center sm:px-6">
-            <button @click="fetchFiles"
-                    class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              Get Elements
-            </button>
-          </div>
-          <div v-if="preset" class="px-4 py-3 bg-gray-50 text-center sm:px-6">
-            <a target="_blank" :href="preset.download_url" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" download>
-              Download Preset {{ preset.name }}
-            </a>
+            <div v-if="showButton" class="px-4 py-3 text-center sm:px-6">
+              <button @click="fetchFiles"
+                      class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Get Elements
+              </button>
+            </div>
+            <div v-if="preset" class="grid grid-cols-4 gap-6 mt-6">
+              <div class="col-span-4 sm:col-span-1">
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <span
+                        class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                      Name
+                    </span>
+                  <input type="text" id="github-owner"
+                         v-model="presetName"
+                         class="cursor-not-allowed focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 bg-gray-50 cursor-not-allowed"/>
+                </div>
+              </div>
+              <div class="col-span-4 sm:col-span-1">
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <span
+                        class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                      Element
+                    </span>
+                  <input type="text" id="github-owner"
+                         v-model="presetType"
+                         class="cursor-not-allowed focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 bg-gray-50 cursor-not-allowed"/>
+                </div>
+              </div>
+              <div class="col-span-4 sm:col-span-1">
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <span
+                        class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                      Last Modified
+                    </span>
+                  <input type="text" id="github-owner"
+                         v-model="presetModified"
+                         class="cursor-not-allowed focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 bg-gray-50 cursor-not-allowed"/>
+                </div>
+              </div>
+              <div class="col-span-4 sm:col-span-1">
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <span
+                        class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                      YOOtheme Pro Version
+                    </span>
+                  <input type="text" id="github-owner"
+                         v-model="yoothemeVersion"
+                         class="cursor-not-allowed focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 bg-gray-50 cursor-not-allowed"/>
+                </div>
+              </div>
+            </div>
+            <div v-if="preset" class="px-4 py-3 text-center sm:px-6">
+              <a target="_blank" :href="preset.download_url" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" download>
+                Download Preset {{ preset.name }}
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -136,10 +182,13 @@ export default {
     return {
       ratelimit: null,
       jsons: null,
-      fetchTime: null,
+      yoothemeVersion: null,
+      presetName: null,
+      presetType: null,
+      presetModified: null,
       elements: null,
       element: null,
-      preset: null,
+      preset: "",
       spinner: false,
       showButton: true,
       errormessage: null,
@@ -290,6 +339,19 @@ export default {
             this.errormessage = error
             this.spinner = false
             this.showButton = true
+          })
+    },
+    fetchJson () {
+      this.spinner = true
+      this.json = null
+      fetch(this.preset.download_url)
+          .then(r => r.json())
+          .then(json => {
+            this.yoothemeVersion = json.version
+            this.presetName = json.name
+            this.presetModified = moment(json.modified).format('HH:mm DD.MM.YYYY')
+            this.presetType = json.type
+            this.spinner = false
           })
     }
   }
